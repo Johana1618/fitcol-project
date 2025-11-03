@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # Contenedor del Backend (Flask + Python)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fitcol-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
+      - DATABASE_URL=sqlite:///fitcol.db
+    volumes:
+      - ./backend:/app
+      - backend-data:/app/data
+    networks:
+      - fitcol-network
+    restart: unless-stopped
+
+  # Contenedor del Frontend (Nginx + HTML/CSS/Bootstrap)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: fitcol-frontend
+    ports:
+      - "8080:80"
+    environment:
+      - API_URL=http://backend:5000
+    depends_on:
+      - backend
+    networks:
+      - fitcol-network
+    restart: unless-stopped
+
+volumes:
+  backend-data:
+
+networks:
+  fitcol-network:
+    driver: bridge
