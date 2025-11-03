@@ -4,11 +4,11 @@ services:
   # Contenedor del Backend (Flask + Python)
   backend:
     build:
-      context: ./backend
+      context: ./fitcol-project-backend
       dockerfile: Dockerfile
     container_name: fitcol-backend
     ports:
-      - "5000:5000"
+      - "8000:8000"
     environment:
       - FLASK_APP=app.py
       - FLASK_ENV=development
@@ -27,9 +27,9 @@ services:
       dockerfile: Dockerfile
     container_name: fitcol-frontend
     ports:
-      - "8080:80"
+      - "3000:3000"
     environment:
-      - API_URL=http://backend:5000
+      - API_URL=http://backend:8000
     depends_on:
       - backend
     networks:
