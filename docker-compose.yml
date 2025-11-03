@@ -4,7 +4,7 @@ services:
   # Contenedor del Backend (Flask + Python)
   backend:
     build:
-      context: ./fitcol-project-backend
+      context: ./backend
       dockerfile: Dockerfile
     container_name: fitcol-backend
     ports:
