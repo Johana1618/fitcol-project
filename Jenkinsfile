@@ -11,7 +11,7 @@ pipeline {
 
         stage('Docker Compose Up') {
             steps {
-                sh '''
+                bat '''
                     echo "Deteniendo contenedores anteriores..."
                     docker compose down --remove-orphans || true
 
