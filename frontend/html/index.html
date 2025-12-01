@@ -22,13 +22,35 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         h1 { color: #667eea; margin: 0; }
-        p { color: #666; }
+        p { color: #666; font-size: 18px; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🏋️ FitCol Frontend is running!</h1>
-        <p>Status: <strong style="color: green;">success</strong></p>
+        <p>Status: <strong id="status-text" style="color: gray;">loading...</strong></p>
     </div>
+
+    <script>
+        async function checkStatus() {
+            const statusText = document.getElementById("status-text");
+            try {
+                const resp = await fetch("https://localhost:8000/");
+                const data = await resp.json();
+                
+                if (data.res && data.res.status === "success") {
+                    statusText.textContent = "success";
+                    statusText.style.color = "green";
+                } else {
+                    statusText.textContent = "failed";
+                    statusText.style.color = "red";
+                }
+            } catch {
+                statusText.textContent = "error";
+                statusText.style.color = "red";
+            }
+        }
+        checkStatus();
+    </script>
 </body>
 </html>
