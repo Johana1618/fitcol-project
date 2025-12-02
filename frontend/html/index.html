@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitCol Frontend</title>
+    <title>FitCol Frontend.</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -35,7 +35,7 @@
         async function checkStatus() {
             const statusText = document.getElementById("status-text");
             try {
-                const resp = await fetch("https://localhost:8000/");
+                const resp = await fetch("http://localhost:8000/");
                 const data = await resp.json();
                 
                 if (data.res && data.res.status === "success") {
