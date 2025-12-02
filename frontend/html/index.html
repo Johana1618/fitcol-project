@@ -37,8 +37,8 @@
             try {
                 const resp = await fetch("http://localhost:8000/");
                 const data = await resp.json();
-                console.log('data', data);
-                if (data.res && data.res.status === "success") {
+
+                if (data && data.status === "success") {
                     statusText.textContent = "success";
                     statusText.style.color = "green";
                 } else {
