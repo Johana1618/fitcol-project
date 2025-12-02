@@ -34,9 +34,14 @@
     <script>
         async function checkStatus(mockResp) {
             const statusText = document.getElementById("status-text");
-
             try {
-                const resp = mockResp || await fetch("http://localhost:8000/");
+                let resp;
+                if (mockResp) {
+                    resp = (mockResp instanceof Promise) ? await mockResp : mockResp;
+                } else {
+                    resp = await fetch("http://localhost:8000/");
+                }
+
                 const data = await resp.json();
 
                 if (data && data.status === "success") {
@@ -46,38 +51,33 @@
                     statusText.textContent = "failed";
                     statusText.style.color = "red";
                 }
-            } catch {
+            } catch (err) {
                 statusText.textContent = "error";
                 statusText.style.color = "red";
+                console.error("checkStatus error:", err);
             }
         }
-
-        checkStatus();
 
         // 🧪 Unit Tests
         async function runTests() {
             console.log("=== Running Unit Tests ===");
 
             // Mock success
-            await checkStatus({
-                json: async () => ({ status: "success" })
-            });
+            await checkStatus({ json: async () => ({ status: "success" }) });
             console.assert(
                 document.getElementById("status-text").textContent === "success",
                 "❌ FAIL: Debe mostrar success"
             );
 
             // Mock failed
-            await checkStatus({
-                json: async () => ({ status: "nope" })
-            });
+            await checkStatus({ json: async () => ({ status: "nope" }) });
             console.assert(
                 document.getElementById("status-text").textContent === "failed",
                 "❌ FAIL: Debe mostrar failed"
             );
 
-            // Mock error
-            await checkStatus(Promise.reject());
+            // Mock error: pasar una promesa que rechaza con un Error (será capturada por try/catch)
+            await checkStatus(Promise.reject(new Error("network failure")));
             console.assert(
                 document.getElementById("status-text").textContent === "error",
                 "❌ FAIL: Debe mostrar error"
@@ -86,6 +86,8 @@
             console.log("✅ Tests finalizados");
         }
 
+        // Ejecutar
+        checkStatus();
         runTests();
     </script>
 </body>
